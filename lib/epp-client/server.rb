@@ -246,10 +246,9 @@ module EPP
 
       # @return [String] next transaction id
       def req_tid
-        @req_tid ||= 0
-        @req_tid += 1
-        date = Time.now.strftime("%Y%m%d")
-        "%s-%s%06d" % [@tag, date, @req_tid]
+        timestamp = '%10.6f' % Time.now.to_f
+
+        tid = timestamp.sub('.', '')
       end
 
       # @return [String] next auth transaction id
