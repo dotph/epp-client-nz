@@ -271,6 +271,8 @@ module EPP
         request  = EPP::Request.new(command)
         response = send_recv_frame(request)
 
+        puts "response #{response.code} #{response}"
+
         return true if response.code == 1000
         raise @error = ResponseError.new(response.code, response.message, response.to_xml)
       end
@@ -285,7 +287,7 @@ module EPP
         command  = EPP::Requests::Command.new(auth_tid, logout)
         request  = EPP::Request.new(command)
         response = send_recv_frame(request)
-        puts "response #{response}"
+
         return true if response.code == 1500
         raise @error = ResponseError.new(response.code, response.message, response.to_xml)
       end
