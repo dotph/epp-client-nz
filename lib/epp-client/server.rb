@@ -271,7 +271,7 @@ module EPP
         request  = EPP::Request.new(command)
         response = send_recv_frame(request)
 
-        puts "response #{response.code} #{response}"
+        Rails.logger.info "response #{response.code} #{response}"
 
         return true if response.code == 1000
         raise @error = ResponseError.new(response.code, response.message, response.to_xml)
