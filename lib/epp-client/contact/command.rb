@@ -54,6 +54,16 @@ module EPP
 
           node
         end
+        def postal_info_int_to_xml(postal_info)
+          node = contact_node('postalInfo')
+          node['type'] = 'int'
+
+          node << contact_node('name', postal_info[:name])
+          node << contact_node('org', postal_info[:org]) if postal_info[:org]
+          node << addr_to_xml(postal_info[:addr])
+
+          node
+        end
         def addr_to_xml(addr)
           node = contact_node('addr')
 

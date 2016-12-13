@@ -7,6 +7,7 @@ module EPP
         @id = id
 
         @postal_info  = options.delete(:postal_info)
+        @postal_info_int  = options.delete(:postal_info_int)
         @voice        = options.delete(:voice)
         @fax          = options.delete(:fax)
         @email        = options.delete(:email)
@@ -22,6 +23,7 @@ module EPP
         node = super
         node << contact_node('id', @id)
         node << postal_info_to_xml(@postal_info)
+        node << postal_info_int_to_xml(@postal_info_int)
         node << contact_node('voice', @voice) if @voice
         node << contact_node('fax', @fax) if @fax
         node << contact_node('email', @email)

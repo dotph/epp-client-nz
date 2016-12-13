@@ -45,6 +45,8 @@ module EPP
             case key
             when :postal_info
               chg << postal_info_to_xml(value)
+            when :postal_info_int
+              chg << postal_info_info_to_xml(value)
             when :auth_info
               chg << auth_info_to_xml(value)
             when :disclose
