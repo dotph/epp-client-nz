@@ -22,8 +22,8 @@ module EPP
       def to_xml
         node = super
         node << contact_node('id', @id)
-        node << postal_info_to_xml(@postal_info)
-        node << postal_info_int_to_xml(@postal_info_int)
+        node << postal_info_to_xml(@postal_info) if @postal_info
+        node << postal_info_int_to_xml(@postal_info_int) if @postal_info_int
         node << contact_node('voice', @voice) if @voice
         node << contact_node('fax', @fax) if @fax
         node << contact_node('email', @email)
