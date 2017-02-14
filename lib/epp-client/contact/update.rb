@@ -4,7 +4,7 @@ module EPP
   module Contact
     class Update < Command
       ADD_REM_ORDER = [:status]
-      CHG_ORDER     = [:postal_info, :voice, :fax, :email, :auth_info, :disclose]
+      CHG_ORDER     = [:postal_info, :postal_info_int, :voice, :fax, :email, :auth_info, :disclose]
 
       # @option [Hash] :status A Hash of status value to text. Text may optionally be an array in the form ["Text", "lang"] if a custom language value needs to be set.
       def initialize(id, options = {})
@@ -41,12 +41,12 @@ module EPP
           CHG_ORDER.each do |key|
             value = @chg[key]
             next if value.nil? || value.empty?
-            
+
             case key
             when :postal_info
               chg << postal_info_to_xml(value)
             when :postal_info_int
-              chg << postal_info_info_to_xml(value)
+              chg << postal_info_int_to_xml(value)
             when :auth_info
               chg << auth_info_to_xml(value)
             when :disclose
@@ -56,7 +56,7 @@ module EPP
             end
           end
         end
-        
+
         node
       end
 
