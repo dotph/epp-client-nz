@@ -32,9 +32,22 @@ module EPP
           :addr => {
             :street => values_for_xpath('//contact:postalInfo/contact:addr/contact:street').join("\n"),
             :city   => value_for_xpath('//contact:postalInfo/contact:addr/contact:city'),
-            :sp     => value_for_xpath('//contact:postalInfo/contact:addr/contact:sp'), 
+            :sp     => value_for_xpath('//contact:postalInfo/contact:addr/contact:sp'),
             :pc     => value_for_xpath('//contact:postalInfo/contact:addr/contact:pc'),
             :cc     => value_for_xpath('//contact:postalInfo/contact:addr/contact:cc')
+          }
+        }
+      end
+      def postal_info_int
+        @postal_info_int ||= {
+          :name => value_for_xpath('//contact:postalInfo[@type="int"]/contact:name'),
+          :org  => value_for_xpath('//contact:postalInfo[@type="int"]/contact:org'),
+          :addr => {
+            :street => values_for_xpath('//contact:postalInfo[@type="int"]/contact:addr/contact:street').join("\n"),
+            :city   => value_for_xpath('//contact:postalInfo[@type="int"]/contact:addr/contact:city'),
+            :sp     => value_for_xpath('//contact:postalInfo[@type="int"]/contact:addr/contact:sp'),
+            :pc     => value_for_xpath('//contact:postalInfo[@type="int"]/contact:addr/contact:pc'),
+            :cc     => value_for_xpath('//contact:postalInfo[@type="int"]/contact:addr/contact:cc')
           }
         }
       end
