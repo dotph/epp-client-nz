@@ -37,8 +37,8 @@ module EPP
           unit = period[-1,1].downcase
           val  = period.to_i
           
-          raise ArgumentError, "period suffix must either be 'm' or 'y'" unless %w(m y).include?(unit)
-          raise ArgumentError, "period value must be in the range 1-99" if val < 1 || val > 99
+          raise ArgumentError, "period suffix must either be 'm' or 'y'" unless %w(m y d).include?(unit)
+          raise ArgumentError, "period value must be in the range 1-99" if val < 1 || val > 3750
           
           return val.to_s, unit
         end
