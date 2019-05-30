@@ -3,6 +3,7 @@ module EPP
     class Command
       include XMLHelpers
       attr_reader :namespaces
+      attr_reader :schema_location
 
       DISCLOSE_ORDER = ['name', 'org', 'addr', 'voice', 'fax', 'email']
       MAX_STREETS = 3
@@ -18,6 +19,10 @@ module EPP
       def set_namespaces(namespaces)
         @namespaces = namespaces
       end
+      
+      def set_schema_location(schema_location)
+        @schema_location = schema_location
+      end
 
       def name
         raise NotImplementedError, "#name must be implemented in subclasses"
@@ -27,7 +32,7 @@ module EPP
         @namespaces ||= {}
         node = contact_node(name)
 
-        xattr = XML::Attr.new(node, "schemaLocation", SCHEMA_LOCATION)
+        xattr = XML::Attr.new(node, "schemaLocation", @schema_location || SCHEMA_LOCATION)
         xattr.namespaces.namespace = @namespaces['xsi'] || XML::Namespace.new(node, 'xsi', 'http://www.w3.org/2001/XMLSchema-instance')
 
         node
