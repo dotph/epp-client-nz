@@ -28,7 +28,7 @@ module EPP
       def set_schema_location(schema_location)
         @schema_location = schema_location
       end
-
+      
       def name
         raise NotImplementedError, "#name must be implemented in subclasses"
       end
@@ -51,12 +51,14 @@ module EPP
         end
         def contact_namespace(node)
           return @namespaces['contact'] if @namespaces.has_key?('contact')
-          @namespaces['contact'] = xml_namespace(node, 'contact', namespace || NAMESPACE)
+          @namespaces['contact'] = xml_namespace(node, 'contact', @namespace || NAMESPACE)
         end
 
         def postal_info_to_xml(postal_info)
           node = contact_node('postalInfo')
-          node['type'] = 'loc'
+          unless postal_info[:local] == 'no'
+            node['type'] = 'loc'
+          end
 
           node << contact_node('name', postal_info[:name])
           node << contact_node('org', postal_info[:org]) if postal_info[:org]
