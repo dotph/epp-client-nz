@@ -3,6 +3,7 @@ module EPP
     class Command
       include XMLHelpers
       attr_reader :namespaces
+      attr_reader :namespace
       attr_reader :schema_location
 
       DISCLOSE_ORDER = ['name', 'org', 'addr', 'voice', 'fax', 'email']
@@ -18,6 +19,10 @@ module EPP
 
       def set_namespaces(namespaces)
         @namespaces = namespaces
+      end
+      
+      def set_namespace(namespace)
+        @namespace = namespace
       end
       
       def set_schema_location(schema_location)
@@ -46,7 +51,7 @@ module EPP
         end
         def contact_namespace(node)
           return @namespaces['contact'] if @namespaces.has_key?('contact')
-          @namespaces['contact'] = xml_namespace(node, 'contact', NAMESPACE)
+          @namespaces['contact'] = xml_namespace(node, 'contact', namespace || NAMESPACE)
         end
 
         def postal_info_to_xml(postal_info)
