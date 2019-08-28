@@ -22,8 +22,8 @@ module EPP
 
         if @command.to_s.include?("domain:create") || @command.to_s.include?("domain:update")
           if @extension and @extension[:extension]
-            ext_dnssec_node = generate_dnssec_node(@extension[:extension])
-            node << as_xml(ext_dnssec_node) if ext_dnssec_node
+            extention_node = generate_extension_node(@extension[:extension])
+            node << as_xml(extention_node) if extention_node
           end
         else
           @extension.set_namespaces(@namespaces) if @extension && @extension.respond_to?(:set_namespaces)
@@ -42,47 +42,55 @@ module EPP
 
       protected
 
-      def generate_dnssec_node extension
+      def generate_extension_node extension
+        # default values
+        @namespace        = extension[:namespace]    # name of the namespace, example: 'secDNS', 'keysys'
+        @uri              = extension[:uri]          # xmlns value
         action            = extension[:action]       # action if create or update
+        # for DNSSEC
         max_sig_life      = extension[:max_sig_life] # maxSigLife
         create_ds_data    = extension[:ds_data]      # ds data for create
         create_key_data   = extension[:key_data]     # key data for create
         ds_for_rem        = extension[:rem]          # remove params for update
         ds_for_add        = extension[:add]          # add params for update
+        # for keysys
+        domain            = extension[:domain]       # for triggerfoa
+
+        # kindly update for any additional extension. Just make sure everything works
 
         #root node
         ext_node = xml_node("extension", nil)
         #action
-        dnssec_action = dnssec_node(action, nil)
+        namespace_node = create_node(action, nil)
         #maxsiglife
         if max_sig_life
-          sig_life = dnssec_node("maxSigLife", max_sig_life)
+          sig_life = create_node("maxSigLife", max_sig_life)
         end
 
         if action == "create"
           #always create ds record
-          dnssec_action << sig_life
+          namespace_node << sig_life
 
           if create_ds_data
             create_ds_data.each do |ds_data|
               ds_data_node = ds_data_node(ds_data)
-              dnssec_action << ds_data_node
+              namespace_node << ds_data_node
             end
           elsif create_key_data
             create_key_data.each do |key_data|
               key_data_node = key_data_node(key_data)
-              dnssec_action << key_data_node
+              namespace_node << key_data_node
             end
           end
 
-          ext_node << dnssec_action
+          ext_node << namespace_node
         elsif action == "update"
           #remove ds record
           if ds_for_rem
-            rem_node = dnssec_node("rem", nil)
+            rem_node = create_node("rem", nil)
 
             if ds_for_rem[:all]
-              rem_all_node = dnssec_node("all", "true")
+              rem_all_node = create_node("all", "true")
               rem_node << rem_all_node
             elsif ds_for_rem[:key_data]
               ds_for_rem[:key_data].each do |key_data|
@@ -96,14 +104,14 @@ module EPP
               end
             end
 
-            dnssec_action << rem_node
+            namespace_node << rem_node
           end
           #add ds record
           if ds_for_add
-            add_node = dnssec_node("add", nil)
+            add_node = create_node("add", nil)
             if ds_for_add[:key_data]
               ds_for_add[:key_data].each do |key_data|
-                key_tag_node = dnssec_node("keyData", nil)
+                key_tag_node = create_node("keyData", nil)
                 key_data_node = key_data_node(key_data)
                 add_node << key_data_node
               end
@@ -113,28 +121,46 @@ module EPP
                 add_node << ds_data_node
               end
             end
-            dnssec_action << add_node
+            namespace_node << add_node
           end
           #chg max sig life
           if sig_life
-            chg_node = dnssec_node("chg", nil)
+            chg_node = create_node("chg", nil)
             chg_node << sig_life
-            dnssec_action << chg_node
-            ext_node << dnssec_action
+            namespace_node << chg_node
+            ext_node << namespace_node
           end
-          ext_node << dnssec_action
+
+          #keysys domain triggerfoa
+          if domain
+            domain_node = create_node("domain", nil)
+
+            if domain[:triggerfoa]
+              triggerfoa_node = create_node("triggerfoa", domain[:triggerfoa])
+              domain_node << triggerfoa_node
+            end
+
+            if domain[:accept_trade]
+              accept_trade = create_node("accept-trade", domain[:accept_trade])
+              domain_node << accept_trade
+            end
+
+            namespace_node << domain_node
+          end
+
+          ext_node << namespace_node
         end
 
         ext_node
       end
 
-      def dnssec_node name, value = nil
-        ext_node = xml_node(name, value)
+      def create_node action, value = nil
+        ext_node = xml_node(action, value)
 
-        if @namespaces.has_key?('secDNS')
-          namespace = @namespaces['secDNS']
+        if @namespaces.has_key?(@namespace)
+          namespace = @namespaces[@namespace]
         else
-          namespace = @namespaces['secDNS'] = xml_namespace(ext_node, 'secDNS', DNSSEC_NAMESPACE)
+          namespace = @namespaces[@namespace] = xml_namespace(ext_node, @namespace, @uri)
         end
 
         ext_node.namespaces.namespace = namespace
@@ -142,12 +168,12 @@ module EPP
       end
 
       def ds_data_node ds_data
-        ds_data_node = dnssec_node("dsData", nil)
+        ds_data_node = create_node("dsData", nil)
 
-        key_tag_node      = dnssec_node("keyTag", ds_data[:key_tag])
-        alg_node          = dnssec_node("alg", ds_data[:alg])
-        digest_type_node  = dnssec_node("digestType", ds_data[:digest_type])
-        digest_node       = dnssec_node("digest", ds_data[:digest])
+        key_tag_node      = create_node("keyTag", ds_data[:key_tag])
+        alg_node          = create_node("alg", ds_data[:alg])
+        digest_type_node  = create_node("digestType", ds_data[:digest_type])
+        digest_node       = create_node("digest", ds_data[:digest])
 
         ds_data_node << key_tag_node
         ds_data_node << alg_node
@@ -164,12 +190,12 @@ module EPP
       end
 
       def key_data_node key_data
-        key_tag_node  = dnssec_node("keyData", nil)
+        key_tag_node  = create_node("keyData", nil)
 
-        flags_node    = dnssec_node("flags", key_data[:flags])
-        protocol_node = dnssec_node("protocol", key_data[:protocol])
-        alg_type_node = dnssec_node("alg", key_data[:alg])
-        pub_key_node  = dnssec_node("pubKey", key_data[:pubKey])
+        flags_node    = create_node("flags", key_data[:flags])
+        protocol_node = create_node("protocol", key_data[:protocol])
+        alg_type_node = create_node("alg", key_data[:alg])
+        pub_key_node  = create_node("pubKey", key_data[:pubKey])
 
         key_tag_node << flags_node
         key_tag_node << protocol_node
