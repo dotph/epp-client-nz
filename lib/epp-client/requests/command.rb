@@ -20,20 +20,25 @@ module EPP
         @command.set_namespaces(@namespaces) if @command.respond_to?(:set_namespaces)
         node << as_xml(@command)
 
-        if @command.to_s.include?("domain:create") || @command.to_s.include?("domain:update")
-          if @extension and @extension[:extension]
-            extention_node = generate_extension_node(@extension[:extension])
-            node << as_xml(extention_node) if extention_node
-          end
-        else
-          @extension.set_namespaces(@namespaces) if @extension && @extension.respond_to?(:set_namespaces)
-          node << as_xml(@extension) if @extension
+        # if @command.to_s.include?("domain:create") || @command.to_s.include?("domain:update")
+        #   if @extension and @extension[:extension]
+        #     extention_node = generate_extension_node(@extension[:extension])
+        #     node << as_xml(extention_node) if extention_node
+        #   end
+        # else
+        #   @extension.set_namespaces(@namespaces) if @extension && @extension.respond_to?(:set_namespaces)
+        #   node << as_xml(@extension) if @extension
+        # end
+
+        if @extension and @extension[:extension]
+          extention_node = generate_extension_node(@extension[:extension])
+          node << as_xml(extention_node) if extention_node
         end
 
         node << epp_node('clTRID', @tid, @namespaces)
 
         # node checking
-        # if @command.to_s.include?("domain:create") || @command.to_s.include?("domain:update")
+        # if @extension and @extension[:extension]
         #   raise "#{node}"
         # end
 
@@ -54,7 +59,8 @@ module EPP
         ds_for_rem        = extension[:rem]          # remove params for update
         ds_for_add        = extension[:add]          # add params for update
         # for keysys
-        domain            = extension[:domain]       # for triggerfoa
+        domain            = extension[:domain]       # check only or triggerfoa
+        contact           = extension[:contact]      # check only or triggerfoa
 
         # kindly update for any additional extension. Just make sure everything works
 
@@ -146,6 +152,22 @@ module EPP
             end
 
             namespace_node << domain_node
+          end
+
+          if contact
+            contact_node = create_node("contact", nil)
+
+            if contact[:triggerfoa]
+              triggerfoa_node = create_node("triggerfoa", contact[:triggerfoa])
+              contact_node << triggerfoa_node
+            end
+
+            if contact[:checkonly]
+              checkonly = create_node("checkonly", contact[:checkonly])
+              contact_node << checkonly
+            end
+
+            namespace_node << contact_node
           end
 
           ext_node << namespace_node
