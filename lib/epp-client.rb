@@ -92,6 +92,17 @@ module EPP
     autoload :InfoResponse,     File.expand_path('../epp-client/host/info_response.rb',      __FILE__)
     autoload :UpdateResponse,   File.expand_path('../epp-client/host/update_response.rb',    __FILE__)
   end
+  
+  module Extension
+    # TODO: Add extensions here for DNSSEC and Keysys
+    
+    module Fee
+      NAMESPACE       = 'urn:ietf:params:xml:ns:fee-0.8'
+      SCHEMA_LOCATION = 'urn:ietf:params:xml:ns:fee-0.8 fee-0.8.xsd'
+
+      autoload :Check,    File.expand_path('../epp-client/extension/fee/check.rb',     __FILE__)
+    end
+  end
 end
 
 require File.expand_path('../epp-client/client',            __FILE__)

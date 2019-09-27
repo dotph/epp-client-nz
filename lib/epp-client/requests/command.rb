@@ -14,33 +14,14 @@ module EPP
       end
 
       def to_xml
-        @namespaces = {}
-
         node = super
+
         @command.set_namespaces(@namespaces) if @command.respond_to?(:set_namespaces)
+        @extension.set_namespaces(@namespaces) if @extension && @extension.respond_to?(:set_namespaces)
+
         node << as_xml(@command)
-
-        # if @command.to_s.include?("domain:create") || @command.to_s.include?("domain:update")
-        #   if @extension and @extension[:extension]
-        #     extention_node = generate_extension_node(@extension[:extension])
-        #     node << as_xml(extention_node) if extention_node
-        #   end
-        # else
-        #   @extension.set_namespaces(@namespaces) if @extension && @extension.respond_to?(:set_namespaces)
-        #   node << as_xml(@extension) if @extension
-        # end
-
-        if @extension and @extension[:extension]
-          extention_node = generate_extension_node(@extension[:extension])
-          node << as_xml(extention_node) if extention_node
-        end
-
+        node << as_xml(@extension) if @extension
         node << epp_node('clTRID', @tid, @namespaces)
-
-        # node checking
-        # if @extension and @extension[:extension]
-        #   raise "#{node}"
-        # end
 
         node
       end
