@@ -92,10 +92,24 @@ module EPP
     autoload :InfoResponse,     File.expand_path('../epp-client/host/info_response.rb',      __FILE__)
     autoload :UpdateResponse,   File.expand_path('../epp-client/host/update_response.rb',    __FILE__)
   end
-  
+
   module Extension
-    # TODO: Add extensions here for DNSSEC and Keysys
-    
+    module Keysys
+      NAMESPACE       = 'http://www.key-systems.net/epp/keysys-1.0'
+      SCHEMA_LOCATION = ''
+
+      autoload :Update,    File.expand_path('../epp-client/extension/keysys/update.rb',     __FILE__)
+    end
+
+    module SecDns
+      NAMESPACE       = 'urn:ietf:params:xml:ns:secDNS-1.1'
+      SCHEMA_LOCATION = ''
+
+      autoload :Info,      File.expand_path('../epp-client/extension/sec_dns/info.rb',       __FILE__)
+      autoload :Create,    File.expand_path('../epp-client/extension/sec_dns/create.rb',     __FILE__)
+      autoload :Update,    File.expand_path('../epp-client/extension/sec_dns/update.rb',     __FILE__)
+    end
+
     module Fee
       NAMESPACE       = 'urn:ietf:params:xml:ns:fee-0.8'
       SCHEMA_LOCATION = 'urn:ietf:params:xml:ns:fee-0.8 fee-0.8.xsd'
