@@ -11,35 +11,32 @@ module EPP
         end
 
         def name
-          'secDNS'
+          'create'
         end
 
         def to_xml
           extension = xml_node('extension')
 
           node = super
-          sec_node = sec_dns_node('create')
 
           #maxsiglife
           if @max_sig_life
             sig_life = sec_dns_node("maxSigLife", @max_sig_life)
           end
 
-          sec_node << sig_life if sig_life
+          node << sig_life if sig_life
 
           if @ds_data
             @ds_data.each do |ds_data|
               ds_data_node = ds_data_node(ds_data)
-              sec_node << ds_data_node
+              node << ds_data_node
             end
           elsif @key_data
             @key_data.each do |key_data|
               key_data_node = key_data_node(key_data)
-              sec_node << key_data_node
+              node << key_data_node
             end
           end
-
-          node << sec_node
 
           extension << node
 

@@ -11,14 +11,13 @@ module EPP
         end
 
         def name
-          'secDNS'
+          'update'
         end
 
         def to_xml
           extension = xml_node('extension')
 
           node = super
-          sec_node = sec_dns_node('update')
 
           #maxsiglife
           if @max_sig_life
@@ -44,7 +43,7 @@ module EPP
               end
             end
 
-            sec_node << rem_node
+            node << rem_node
           end
           #add ds record
           if @ds_for_add
@@ -62,7 +61,7 @@ module EPP
               end
             end
 
-            sec_node << add_node
+            node << add_node
           end
           #chg max sig life
           if sig_life
@@ -70,8 +69,6 @@ module EPP
             chg_node << sig_life
             node << chg_node
           end
-
-          node << sec_node
 
           extension << node
 

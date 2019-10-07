@@ -11,7 +11,7 @@ module EPP
         end
 
         def name
-          'keysys'
+          'update'
         end
 
         def to_xml
