@@ -3,7 +3,7 @@ require File.expand_path('../command', __FILE__)
 module EPP
   module Extension
     module Keysys
-      class Update < Command
+      class Create < Command
         def initialize(opts={})
           @node_for       = opts[:node_for]
           @triggerfoa     = opts[:triggerfoa]
@@ -14,7 +14,7 @@ module EPP
         end
 
         def name
-          'update'
+          'create'
         end
 
         def to_xml
@@ -46,7 +46,7 @@ end
 #       registrant: "P-BVM466"
 #     }
 #   }),
-#   EPP::Extension::Keysys::Update.new({
+#   EPP::Extension::Keysys::Create.new({
 #     node_for: "contact",
 #     triggerfoa: "1",
 #     accept_trade: "1"
@@ -60,7 +60,7 @@ end
 #       registrant: "P-BVM466"
 #     }
 #   }),
-#   EPP::Extension::Keysys::Update.new({
+#   EPP::Extension::Keysys::Create.new({
 #     node_for: "domain",
 #     triggerfoa: "1",
 #   })
