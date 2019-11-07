@@ -48,7 +48,7 @@ module EPP
           val  = period.to_i
           
           raise ArgumentError, "period suffix must either be 'm' or 'y'" unless %w(m y d).include?(unit)
-          raise ArgumentError, "period value must be in the range 1-3750" if val < 1 || val > 3750
+          raise ArgumentError, "period value must be in the range 1-7500" if val < 1 || val > 7500
           
           return val.to_s, unit
         end
