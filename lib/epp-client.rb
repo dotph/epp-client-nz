@@ -111,8 +111,8 @@ module EPP
     end
 
     module Fee
-      NAMESPACE       = 'urn:ietf:params:xml:ns:fee-0.8'
-      SCHEMA_LOCATION = 'urn:ietf:params:xml:ns:fee-0.8 fee-0.8.xsd'
+      NAMESPACE       = 'urn:ietf:params:xml:ns:fee-0.7'
+      SCHEMA_LOCATION = 'urn:ietf:params:xml:ns:fee-0.7 fee-0.7.xsd'
 
       autoload :Check,    File.expand_path('../epp-client/extension/fee/check.rb',     __FILE__)
       autoload :CheckResponse,    File.expand_path('../epp-client/extension/fee/check_response.rb',     __FILE__)
