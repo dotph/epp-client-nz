@@ -114,8 +114,10 @@ module EPP
       NAMESPACE       = 'urn:ietf:params:xml:ns:fee-0.7'
       SCHEMA_LOCATION = 'urn:ietf:params:xml:ns:fee-0.7 fee-0.7.xsd'
 
-      autoload :Check,    File.expand_path('../epp-client/extension/fee/check.rb',     __FILE__)
-      autoload :CheckResponse,    File.expand_path('../epp-client/extension/fee/check_response.rb',     __FILE__)
+      autoload :Check,         File.expand_path('../epp-client/extension/fee/check.rb',     __FILE__)
+      autoload :Create,        File.expand_path('../epp-client/extension/fee/create.rb',     __FILE__)
+      autoload :Renew,         File.expand_path('../epp-client/extension/fee/renew.rb',     __FILE__)
+      autoload :CheckResponse, File.expand_path('../epp-client/extension/fee/check_response.rb',     __FILE__)
     end
   end
 end
