@@ -6,44 +6,52 @@ module EPP
       class CheckResponse < Response
         def fees(name, command)
           fees = get_fees command
-          return fees[name]['fee'] if fees[name]
+          return fees
 
           raise ArgumentError, "no fee found for #{name}"
         end
 
         def fee_type(name, command)
           fees = get_fees command
-          return fees[name]['class'] if fees[name]
+          return fees.first[:class]
 
           raise ArgumentError, "no fee type found for #{name}"
         end
 
+        def fee(name, command, period)
+          return get_fees(command, period)
+
+          raise ArgumentError, "no fee found for #{name}"
+        end
+
         protected
           def create_fees
-            @create_fees = get_fees 'create'
+            @create_fees = get_fees('create')
           end
 
           def renew_fees
-            @renew_fees = get_fees 'renew'
+            @renew_fees = get_fees('renew')
           end
 
           def transfer_fees
-            @transfer_fees = get_fees 'transfer'
+            @transfer_fees = get_fees('transfer')
           end
 
-          def get_fees command
-            @fees = {}
+          def get_fees(command, period = '1')
+            @fees = []
             fees_path = nodes_for_xpath('//fee:cd', @response.extension)
             fees_path.each do |path|
-              node_map = {'fee' => 0.0}
-              path.each do |node|
-                if node.name == 'fee'
-                  node_map['fee'] += node.content.to_f
+              hash = Hash.new
+              path.reject{|text_node| text_node.name == 'text'}.each do |node|
+                if node.name == 'period'
+                  hash[node.name.to_sym] = node.content.to_i
+                elsif node.name == 'fee'
+                  hash[node.name.to_sym] = node.content.to_f
                 else
-                  node_map[node.name] = node.content
+                  hash[node.name.to_sym] = node.content
                 end
               end
-              @fees[node_map['name']] = node_map if node_map['command'] == command
+              @fees << hash
             end
             @fees
           end

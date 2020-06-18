@@ -4,8 +4,10 @@ module EPP
   module Extension
     module Fee
       class Check < Command
-        def initialize(*names)
+        def initialize(names = [], periods = ['1','2','5','10'], period_unit = 'y')
           @names = names.flatten
+          @periods = periods.flatten
+          @period_unit = period_unit
         end
 
         def name
@@ -17,14 +19,19 @@ module EPP
 
           node = super
           @names.each do |name|
-            domain = fee_node('domain')
-            domain << fee_node('name', name)
-            domain << fee_node('currency', 'USD')
-            domain << fee_node('command', 'create')
-            node << domain
+            @periods.each do |period|
+              domain = fee_node('domain')
+              domain << fee_node('name', name)
+              domain << fee_node('command', 'create')
+              fee_period_node = fee_node('period', period)
+              fee_period_node['unit'] = @period_unit
+              domain << fee_period_node
+              node << domain
+            end
           end
+
           extension << node
-          
+
           extension
         end
       end
