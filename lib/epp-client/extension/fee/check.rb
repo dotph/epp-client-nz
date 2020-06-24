@@ -37,6 +37,15 @@ module EPP
               domain << fee_period_node
               node << domain
             end
+            @periods.each do |period|
+              domain = fee_node('domain')
+              domain << fee_node('name', name)
+              domain << fee_node('command', 'transfer')
+              fee_period_node = fee_node('period', period)
+              fee_period_node['unit'] = @period_unit
+              domain << fee_period_node
+              node << domain
+            end
           end
 
           extension << node

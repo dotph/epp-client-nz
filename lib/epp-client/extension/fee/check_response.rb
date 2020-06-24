@@ -53,7 +53,11 @@ module EPP
               end
               @fees << hash
             end
-            @fees
+            if command.present?
+              @fees.select{|fee| fee[:command] == command}
+            else
+              @fees
+            end
           end
       end
     end
