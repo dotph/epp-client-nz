@@ -29,6 +29,10 @@ module EPP
         availability.count
       end
 
+      def availabilities
+        availability
+      end
+      
       protected
         def availability
           @availability ||= nodes_for_xpath('//domain:name').inject({}) do |hash, node|
