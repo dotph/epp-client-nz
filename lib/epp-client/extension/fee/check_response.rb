@@ -41,8 +41,9 @@ module EPP
             @fees = []
             fees_path = nodes_for_xpath('//fee:cd', @response.extension)
             fees_path.each do |path|
-              hash = Hash.new
-              path.reject{|text_node| text_node.name == 'text'}.each do |node|
+              hash          = Hash.new
+              all_nodes     = path.reject{|text_node| text_node.name == 'text'}
+              all_nodes.each do |node|
                 if node.name == 'period'
                   hash[node.name.to_sym] = node.content.to_i
                 elsif node.name == 'fee'
@@ -51,6 +52,7 @@ module EPP
                   hash[node.name.to_sym] = node.content
                 end
               end
+              hash[:class] = 'premium' if all_nodes.select{|node| node.name == 'fee'}.count > 1
               @fees << hash
             end
             if command.present?

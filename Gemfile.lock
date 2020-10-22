@@ -49,3 +49,6 @@ DEPENDENCIES
   shoulda
   simplecov
   yard
+
+BUNDLED WITH
+   2.1.2
