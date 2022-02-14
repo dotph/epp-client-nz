@@ -28,7 +28,6 @@ module EPP
           node = fee_node(name)
           xattr = XML::Attr.new(node, "schemaLocation", @schema_location || SCHEMA_LOCATION)
           xattr.namespaces.namespace = @namespaces['xsi'] || XML::Namespace.new(node, 'xsi', 'http://www.w3.org/2001/XMLSchema-instance')
-
           node
         end
 

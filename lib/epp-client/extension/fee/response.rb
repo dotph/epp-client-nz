@@ -6,6 +6,11 @@ module EPP
 
         def initialize(response)
           @response = response
+          @arg_namespace = if @response&.extension&.namespaces&.namespace&.to_s&.split(':').first.include?('fee')
+                            @response&.extension&.namespaces&.namespace&.to_s&.split(':').drop(1).join(':')
+                           else
+                            @response&.extension&.namespaces&.namespace&.to_s || NAMESPACE
+                           end
         end
 
         def method_missing(meth, *args, &block)
@@ -28,7 +33,7 @@ module EPP
 
         protected
           def namespaces
-            {'contact' => NAMESPACE}
+            {'fee' => @arg_namespace}
           end
       end
     end

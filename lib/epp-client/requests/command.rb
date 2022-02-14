@@ -22,7 +22,6 @@ module EPP
         node << as_xml(@command)
         node << as_xml(@extension) if @extension
         node << epp_node('clTRID', @tid, @namespaces)
-
         node
       end
     end

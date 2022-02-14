@@ -49,7 +49,6 @@ module EPP
           end
 
           extension << node
-
           extension
         end
       end
