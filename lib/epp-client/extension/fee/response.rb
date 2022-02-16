@@ -33,7 +33,7 @@ module EPP
 
         protected
           def namespaces
-            {'fee' => @arg_namespace}
+            {"fee" => @arg_namespace}
           end
       end
     end

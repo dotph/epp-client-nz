@@ -39,7 +39,7 @@ module EPP
 
           def get_fees(command, period = '1')
             @fees = []
-            fees_path = nodes_for_xpath('//fee:cd', @response.extension)
+            fees_path = (@response.extension || @response.data).find('//fee:cd', namespaces)
             fees_path.each do |path|
               hash          = Hash.new
               all_nodes     = path.reject{|text_node| text_node.name == 'text'}
