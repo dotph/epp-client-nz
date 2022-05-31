@@ -32,7 +32,7 @@ module EPP
       protected
         def availability
           @availability ||= nodes_for_xpath('//contact:id').inject({}) do |hash, node|
-            hash[node.content.strip] = node['avail'] == '1'
+            hash[node.content.strip] = node['avail'] == '1' || node['avail'] == 'true'
             hash
           end
         end
