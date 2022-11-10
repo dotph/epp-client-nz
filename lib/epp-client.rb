@@ -117,6 +117,13 @@ module EPP
       autoload :Check,    File.expand_path('../epp-client/extension/fee/check.rb',     __FILE__)
       autoload :CheckResponse,    File.expand_path('../epp-client/extension/fee/check_response.rb',     __FILE__)
     end
+
+    module Rgp
+      NAMESPACE       = 'urn:ietf:params:xml:ns:rgp-1.0'
+      SCHEMA_LOCATION = ''
+
+      autoload :Update,    File.expand_path('../epp-client/extension/rgp/update.rb',     __FILE__)
+    end
   end
 end
 
