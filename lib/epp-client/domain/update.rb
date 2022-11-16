@@ -4,7 +4,7 @@ module EPP
   module Domain
     class Update < Command
       ADD_REM_ORDER = [:ns, :contact, :status]
-      CHG_ORDER     = [:registrant, :auth_info]
+      CHG_ORDER     = [:registrant, :auth_info, :empty]
 
 
       # @option [Hash] :status A Hash of status value to text. Text may optionally be an array in the form ["Text", "lang"] if a custom language value needs to be set.
@@ -41,6 +41,7 @@ module EPP
           node << chg = domain_node('chg')
           CHG_ORDER.each do |key|
             value = @chg[key]
+            next if key == 'empty'
             next if value.nil?
             
             case key
