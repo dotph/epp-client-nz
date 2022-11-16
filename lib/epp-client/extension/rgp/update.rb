@@ -30,11 +30,11 @@ module EPP
 
           if @op == "report"
             report_node = rgp_node("report")
-            report_node << rgp_node("resReason", @resreason) if @resreason
             report_node << rgp_node("preData", @predata) if @predata
             report_node << rgp_node("postData", @postdata) if @postdata
             report_node << rgp_node("delTime", @deltime) if @deltime
             report_node << rgp_node("resTime", @restime) if @restime
+            report_node << rgp_node("resReason", @resreason) if @resreason
             report_node << rgp_node("statement", @statement) if @statement
             report_node << rgp_node("other", @other) if @other
 
