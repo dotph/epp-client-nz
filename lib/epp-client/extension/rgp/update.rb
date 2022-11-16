@@ -9,12 +9,13 @@ module EPP
           @op        = opts[:op]
           @resreason = opts[:resreason]
 
-          @predata   = opts[:predata]
-          @postdata  = opts[:postdata]
-          @deltime   = opts[:deltime]
-          @restime   = opts[:restime]
-          @statement = opts[:statement]
-          @other     = opts[:other]
+          @predata    = opts[:predata]
+          @postdata   = opts[:postdata]
+          @deltime    = opts[:deltime]
+          @restime    = opts[:restime]
+          @statement1 = opts[:statement1]
+          @statement2 = opts[:statement2]
+          @other      = opts[:other]
         end
 
         def name
@@ -35,7 +36,8 @@ module EPP
             report_node << rgp_node("delTime", @deltime) if @deltime
             report_node << rgp_node("resTime", @restime) if @restime
             report_node << rgp_node("resReason", @resreason) if @resreason
-            report_node << rgp_node("statement", @statement) if @statement
+            report_node << rgp_node("statement", @statement1) if @statement1
+            report_node << rgp_node("statement", @statement2) if @statement2
             report_node << rgp_node("other", @other) if @other
 
             node_for << report_node
